@@ -1,65 +1,77 @@
-/* Einblenden beim Scrollen – greift nur, wenn JavaScript läuft (html.js) */
-html.js .rv { opacity: 0; transform: translateY(30px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
-html.js .rv.rv--left { transform: translateX(-40px); }
-html.js .rv.rv--right { transform: translateX(40px); }
+/* Einblenden beim Scrollen – greift nur mit JavaScript (html.js).
+   Bilder werden nie ausgeblendet, sie sind sofort sichtbar. */
+html.js .rv { opacity: 0; transform: translateY(22px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
 html.js .rv.is-in { opacity: 1; transform: none; }
 
-/* Bilder: von links aufdecken, dabei leicht herauszoomen */
-html.js .rv-img { overflow: hidden; }
-html.js .rv-img img { clip-path: inset(0 100% 0 0); transform: scale(1.12); transition: clip-path 1.1s cubic-bezier(.7,0,.2,1), transform 1.6s cubic-bezier(.2,.7,.2,1); }
-html.js .rv-img.is-in img { clip-path: inset(0); transform: none; }
-html.js .about__badge { opacity: 0; transform: translateY(-14px); transition: opacity .5s .7s, transform .5s .7s; }
-html.js .is-in > .about__badge { opacity: 1; transform: none; }
+/* Hero: ruhiger Aufbau beim Laden */
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cardIn { from { opacity: 0; transform: translateY(40px) scale(.98); } to { opacity: 1; transform: none; } }
+.hero__text > * { animation: rise .9s var(--ease) both; }
+.hero__text > :nth-child(1) { animation-delay: .05s; }
+.hero__text > :nth-child(2) { animation-delay: .15s; }
+.hero__text > :nth-child(3) { animation-delay: .28s; }
+.hero__text > :nth-child(4) { animation-delay: .4s; }
+.hero__text > :nth-child(5) { animation-delay: .55s; }
+.hero .lead { animation: cardIn 1s .35s var(--ease) both; }
+.trust__bar { animation: rise .9s .7s var(--ease) both; }
+.hero__faces img { animation: fade .5s both; }
+.hero__faces img:nth-child(1) { animation-delay: .8s; }
+.hero__faces img:nth-child(2) { animation-delay: .92s; }
+.hero__faces img:nth-child(3) { animation-delay: 1.04s; }
 
-/* Überschriften: Linie für Linie von unten */
-html.js h2.rv { transform: translateY(40px); transition-duration: .9s; }
+/* Formular: Schrittwechsel */
+@keyframes stepIn { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: none; } }
+@keyframes stepBack { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: none; } }
+.lead__step.is-active { animation: stepIn .45s var(--ease) both; }
+.lead.is-back .lead__step.is-active { animation-name: stepBack; }
+@keyframes okPop { 0% { transform: scale(0); } 70% { transform: scale(1.12); } 100% { transform: scale(1); } }
+.lead__done.is-active .lead__ok { animation: okPop .6s .15s var(--ease) both; }
+@keyframes nudge { 0%, 100% { transform: none; } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.lead.is-shake { animation: nudge .3s; }
 
-/* Hero beim Laden */
-@keyframes heroIn { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
-@keyframes heroBg { from { opacity: 0; } to { opacity: 1; } }
-.hero__inner > * { animation: heroIn .8s cubic-bezier(.2,.7,.2,1) both; }
-.hero__inner > :nth-child(1) { animation-delay: .1s; }
-.hero__inner > :nth-child(2) { animation-delay: .2s; }
-.hero__inner > :nth-child(3) { animation-delay: .35s; }
-.hero__inner > :nth-child(4) { animation-delay: .5s; }
-.hero__inner > :nth-child(5) { animation-delay: .65s; }
-.hero::before { animation: heroBg 1.2s ease both; }
-.header__inner { animation: heroBg .6s ease both; }
+/* Aufmerksamkeit, wenn jemand aus einem Abschnitt zum Formular springt */
+@keyframes ring { 0% { box-shadow: 0 40px 90px -30px rgba(0,0,0,.6), 0 0 0 0 rgba(241,90,34,.7); } 100% { box-shadow: 0 40px 90px -30px rgba(0,0,0,.6), 0 0 0 18px rgba(241,90,34,0); } }
+.lead.is-ping { animation: ring .9s ease-out 2; }
 
-/* Hover */
-.btn .ic, .topbar__cta .ic { transition: transform .25s; }
-.btn--orange:hover .ic, .topbar__cta:hover .ic { transform: translateX(5px); }
-.scard, .projects__grid figure { overflow: hidden; }
-.scard img, .projects__grid img { transition: transform .7s cubic-bezier(.2,.7,.2,1); }
-.scard:hover img, .projects__grid figure:hover img { transform: scale(1.06); }
-.scard__body { position: relative; background: #fff; }
-.projects__grid figcaption { position: relative; background: var(--gray); }
-.trio__item .sico { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
-.trio__item:hover .sico { transform: translateY(-5px) scale(1.06); }
-.why__feats .sico { transition: transform .35s; }
-.why__feats > div:hover .sico { transform: translateY(-4px); }
-.nav a { position: relative; }
-.nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
+/* Buttons: dezenter Lichtstreifen */
+.btn--orange::after { content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.28), transparent); transform: skewX(-18deg); transition: left .7s var(--ease); }
+.btn--orange:hover::after { left: 120%; }
+.btn .ic { transition: transform .25s var(--ease); }
+.btn:hover .ic { transform: translateX(4px); }
+.btn--ghost:hover .ic, .btn--navy:hover .ic:first-child { transform: none; }
+
+/* Navigation */
+.nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; background: var(--orange); transform: scaleX(0); transform-origin: left; transition: transform .3s var(--ease); }
 .nav a:hover::after { transform: scaleX(1); }
-.circle { transition: transform .25s; }
-a:hover > .circle { transform: scale(1.08); }
 
-/* Projektfilter und FAQ */
-@keyframes popIn { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
-.projects__grid figure.pop { animation: popIn .45s cubic-bezier(.2,.7,.2,1) both; }
+/* Ablauf: Linie zeichnet sich, Schritte folgen */
+html.js .steps::before { transform: scaleX(0); transition: transform 1.4s var(--ease); }
+html.js .steps.is-in::before { transform: scaleX(1); }
+
+/* Bewertungsbalken füllen sich */
+html.js .reviews__bars u { transform: scaleX(0); transition: transform 1.1s var(--ease); }
+html.js .reviews__sum.is-in .reviews__bars u { transform: scaleX(1); }
+html.js .reviews__sum.is-in .reviews__bars li:nth-child(2) u { transition-delay: .1s; }
+html.js .reviews__sum.is-in .reviews__bars li:nth-child(3) u { transition-delay: .2s; }
+
+/* Vergleich: Zeilen nacheinander */
+html.js .compare__row.rv { transform: translateY(14px); }
+
+/* Sonstiges */
+.why__feats .sico { transition: transform .4s var(--ease); }
+.why__feats > div:hover .sico { transform: translateY(-4px); }
+.area__list li { transition: border-color .3s, box-shadow .3s; }
+.area__list li:hover { border-color: var(--navy); }
+@keyframes popIn { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+.projects__grid figure.pop { animation: popIn .45s var(--ease) both; }
 @keyframes faqIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
-.faq details[open] p { animation: faqIn .3s ease both; }
-
-/* Mobile Leiste fährt nach dem Laden ein */
+.faq details[open] p { animation: faqIn .35s ease both; }
 @keyframes barIn { from { transform: translateY(100%); } to { transform: none; } }
-.mbar { animation: barIn .5s .8s cubic-bezier(.2,.7,.2,1) both; }
-
-@media (max-width: 1080px) {
-  .nav a::after { display: none; }
-  html.js .rv.rv--left, html.js .rv.rv--right { transform: translateY(30px); }
-}
+.mbar { animation: barIn .5s 1s var(--ease) both; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  html.js .rv, html.js .rv-img img, html.js .about__badge { opacity: 1; transform: none; clip-path: none; }
+  html.js .rv { opacity: 1; transform: none; }
+  html.js .steps::before, html.js .reviews__bars u { transform: none; }
 }
